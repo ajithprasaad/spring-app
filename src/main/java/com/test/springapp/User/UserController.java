@@ -13,30 +13,31 @@ public class UserController {
     private UserDAOService userDaoService;
 
 
-    @RequestMapping(value = "/user/all", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/all", method = RequestMethod.GET,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Object getUsers() {
         return userDaoService.findAll();
     }
 
-    /* Login Handler*/
-    @RequestMapping(value = "user/login", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    /*********** LOGIN HANDLER ************/
+    @RequestMapping(value = "user/login", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String authenticate(@RequestBody User user) {
-        try {
-            User existingUser = new User(userId, user.getName(), user.getEmail(), user.getPassword());
-            if (userDaoService.authenticate(existingUser)) {
-
-            }
-        } catch (Exception ex) {
-            return "Error creating the user: " + ex.toString();
+        User existingUser = new User(userId, user.getName(), user.getEmail(), user.getPassword());
+        if (userDaoService.authenticate(existingUser)) {
+            return "User authentication successful";
+        } else {
+            return "User could not be authenticated";
         }
-        return "User successfully authenticated";
+
     }
 
 
-    /* Signup Handler*/
-    @RequestMapping(value = "user/add", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    /********* SIGNUP HANDLER ************/
+    @RequestMapping(value = "user/add", method = RequestMethod.POST,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String signup(@RequestBody User user) {
         userId = getUserCount();

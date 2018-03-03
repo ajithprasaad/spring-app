@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserDAOService {
@@ -34,8 +35,13 @@ public class UserDAOService {
     boolean authenticate(User existingUser) {
         userList.clear();
         userRepository.findAll().forEach(user -> userList.add(user));
-        if(userList.contains(existingUser.getEmail()) && userList.contains(existingUser.getPassword())){
-            return true;
-        } else return false;
+        for(User user: userList){
+            if(Objects.equals(existingUser.getEmail(), user.getEmail())){
+                if(Objects.equals(existingUser.getPassword(), user.getPassword())){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
